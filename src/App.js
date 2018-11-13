@@ -1,25 +1,40 @@
 import React from "react";
 import Select from "react-select";
+import _ from 'lodash';
 import { Helmet } from "react-helmet";
 import "./App.css";
 import { Grid, Row, Col, Table } from "react-bootstrap";
 
-const options = [
-  { value: "kalles-grustransporter-ab", label: "Kalles Grustransporter AB" },
-  { value: "johans-bulk-ab", label: "Johans Bulk AB" },
-  { value: "haralds-värdetransporter-ab", label: "Haralds Värdetransporter AB" }
-];
+import { getVehicles } from './api/vehicles';
 
 class App extends React.Component {
   state = {
-    selectedOption: null
+    selectedOption: null,
+    options: [],
   };
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
+    console.log('this.state', this.state);
   };
+
+  componentDidMount() {
+    getVehicles()
+      .then(vehicles => {
+        this.setState({
+          options: _.map(_.uniqBy(vehicles, 'customerSlug'), vehicle => {
+            return {
+              value: vehicle.customerSlug,
+              label: vehicle.custumerName,
+            }
+          })
+        });
+      });
+  }
+
   render() {
-    const { selectedOption } = this.state;
+    const { selectedOption, options } = this.state;
 
     return (
       <React.Fragment>
