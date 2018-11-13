@@ -7,6 +7,7 @@ export class CustomerSearchBar extends Component {
     const { customersList, handleCustomer, options } = this.props;
     return (
       <Select
+        classNamePrefix="react-select"
         className="client-search"
         isMulti
         placeholder="Insert Client Names"
